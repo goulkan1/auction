@@ -4,6 +4,10 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 require("./Taken");
 const Taken = mongoose.model("Taken");
+const jwt = require("jsonwebtoken");
+const auth = require("./middleware/auth");
+const cookieParser = require("cookie-parser");
+
 
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/takens?retryWrites=true&w=majority",
@@ -12,8 +16,9 @@ mongoose.connect(
 );
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
-app.post("/taken", async (req, res) => {
+app.post("/taken", auth, async (req, res) => {
   var newTakens = {
     idProject: mongoose.Types.ObjectId(req.body.idProject),
     idUser: mongoose.Types.ObjectId(req.body.idUser),
@@ -26,7 +31,7 @@ app.post("/taken", async (req, res) => {
   res.send(data);
 });
 
-app.get("/takens", (req, res) => {
+app.get("/takens", auth, (req, res) => {
   Taken.find()
     .then((takens) => {
       res.json(takens);
@@ -38,7 +43,7 @@ app.get("/takens", (req, res) => {
     });
 });
 
-app.get("/taken/:id", (req, res) => {
+app.get("/taken/:id", auth, (req, res) => {
   Taken.findById(req.params.id)
     .then((taken) => {
       if (taken) {
@@ -54,7 +59,7 @@ app.get("/taken/:id", (req, res) => {
     });
 });
 
-app.delete("/taken/:id", (req, res) => {
+app.delete("/taken/:id", auth, (req, res) => {
   Taken.findByIdAndRemove(req.params.id)
     .then((taken) => {
       res.send("project takens berhasil di hapus");

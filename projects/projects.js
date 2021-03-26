@@ -4,8 +4,12 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require("./Project");
 const Project = mongoose.model("Project");
+const auth = require("./middleware/auth");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/projects?retryWrites=true&w=majority",
@@ -32,7 +36,7 @@ app.post("/project", async (req, res) => {
   res.send(data);
 });
 
-app.get("/projects", (req, res) => {
+app.get("/projects", auth, (req, res) => {
   Project.find()
     .then((projects) => {
       res.json(projects);
@@ -44,7 +48,7 @@ app.get("/projects", (req, res) => {
     });
 });
 
-app.get("/project/:id", (req, res) => {
+app.get("/project/:id", auth, (req, res) => {
   Project.findById(req.params.id)
     .then((project) => {
       if (project) {
@@ -60,7 +64,7 @@ app.get("/project/:id", (req, res) => {
     });
 });
 
-app.delete("/project/:id", (req, res) => {
+app.delete("/project/:id", auth, (req, res) => {
   Project.findByIdAndRemove(req.params.id)
     .then(() => {
       res.send("hapus project berhasil");

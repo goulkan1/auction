@@ -55,7 +55,7 @@ app.get("/users", auth, async (req, res, next) => {
   // res.send(data);
 });
 
-app.get("/user/:id", (req, res) => {
+app.get("/user/:id", auth, (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
       if (user) {
@@ -71,7 +71,7 @@ app.get("/user/:id", (req, res) => {
     });
 });
 
-app.delete("/user/:id", (req, res) => {
+app.delete("/user/:id", auth, (req, res) => {
   User.findByIdAndRemove(req.params.id)
     .then(() => {
       res.send("hapus user berhasil");
