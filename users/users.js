@@ -4,9 +4,14 @@ const mongoose = require("mongoose");
 const app = express();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("./User");
+const auth = require("./middleware/auth");
+
 app.use(bodyParser.json());
+app.use(cookieParser());
+
 const User = mongoose.model("User");
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/users?retryWrites=true&w=majority",
@@ -31,16 +36,23 @@ app.post("/register", async (req, res) => {
   res.send(data);
 });
 
-app.get("/users", (req, res) => {
+app.get("/users", auth, async (req, res, next) => {
+  // const cookie = req.cookies["jwt"];
+  // const claims = jwt.verify(cookie, "secret");
+
+  // if (!claims) {
+  //   return res.status(401).send({ message: "unauth " });
+  // }
   User.find()
-    .then((users) => {
-      res.json(users);
+    .then((Users) => {
+      res.json(Users);
     })
     .catch((err) => {
       if (err) {
         throw err;
       }
     });
+  // res.send(data);
 });
 
 app.get("/user/:id", (req, res) => {
