@@ -27,6 +27,7 @@ app.post("/project", async (req, res) => {
     startProject: req.body.startProject,
     endProject: req.body.endProject,
     nMilestone: req.body.nMilestone,
+    kategori: req.body.kategori,
     idUser: mongoose.Types.ObjectId(req.body.idUser),
   };
 
@@ -46,6 +47,26 @@ app.get("/projects", auth, (req, res) => {
         throw err;
       }
     });
+});
+
+app.patch("/ubah/:id", auth, async (req, res) => {
+  const options = { new: true };
+  const id = req.params.id;
+  var updateProject = {
+    nama: req.body.nama,
+    value: req.body.value,
+    required: req.body.required,
+    deskripsi: req.body.deskripsi,
+    status: req.body.status,
+    expires: req.body.expires,
+    startProject: req.body.startProject,
+    endProject: req.body.endProject,
+    nMilestone: req.body.nMilestone,
+    kategori: req.body.kategori,
+    idUser: mongoose.Types.ObjectId(req.body.idUser),
+  };
+  result = await Project.findOneAndUpdate(id, updateProject, options);
+  res.send(result);
 });
 
 app.get("/project/:id", auth, (req, res) => {

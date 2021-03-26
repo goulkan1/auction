@@ -37,6 +37,10 @@ mongoose.model("Project", {
     type: "string",
     require: true,
   },
+  kategori: {
+    type: "string",
+    require: true,
+  },
   idUser: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,

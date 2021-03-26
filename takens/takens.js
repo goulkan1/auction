@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const auth = require("./middleware/auth");
 const cookieParser = require("cookie-parser");
 
-
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/takens?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true },
