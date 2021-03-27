@@ -25,9 +25,23 @@ app.post("/register", async (req, res) => {
 
   var newUser = {
     nama: req.body.nama,
-    roles: req.body.roles,
+    address: {
+      idn: req.body.address.idn,
+      provinsi: req.body.address.provinsi,
+      kota: req.body.address.kota,
+      kecamatan: req.body.address.kecamatan,
+      kelurahan: req.body.address.kelurahan,
+      alamat: req.body.address.alamat,
+    },
+    industri: req.body.industri,
+    website: req.body.website,
+    about: req.body.about,
     email: req.body.email,
+    roles: req.body.roles,
+    status: req.body.status,
     password: hassedPassword,
+    logo: req.body.logo,
+    image: req.body.image,
   };
   var user = new User(newUser);
 
@@ -98,7 +112,9 @@ app.post("/login", async (req, res) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
 
-  res.send(token);
+  // res.send(token);
+  const { password, email, ...data } = await user.toJSON();
+  res.send(data);
   //   res.send({ message: "sukses" });
 });
 
