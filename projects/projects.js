@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors());
 
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/projects?retryWrites=true&w=majority",

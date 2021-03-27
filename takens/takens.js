@@ -13,7 +13,7 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true },
   console.log("konek database")
 );
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 

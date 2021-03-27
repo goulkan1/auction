@@ -8,7 +8,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("./User");
 const auth = require("./middleware/auth");
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 

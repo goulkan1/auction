@@ -1,0 +1,9 @@
+version: '3'
+services: 
+  projects: 
+    container_name: projects
+    ports:
+      - '8002:8002'
+    volumes:
+      - .:/app
+ 
