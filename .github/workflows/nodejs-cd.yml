@@ -11,7 +11,6 @@ jobs:
 
     steps:
       - name: CD
-        run: echo 'CD is Disabled (Check workflow comment for the code).'
        - name: Deploy using ssh
          uses: appleboy/ssh-action@master
          with:
