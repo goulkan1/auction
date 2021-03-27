@@ -22,12 +22,4 @@ jobs:
              cd /home/auction/
              git pull origin master
              git status
-             cd /home/auction/projects
-             npm install 
-             npm start 
-             cd /home/auction/takens
-             npm install 
-             npm start 
-             cd /home/auction/users
-             npm install 
-             npm start 
+           
