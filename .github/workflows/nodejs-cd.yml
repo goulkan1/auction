@@ -18,8 +18,12 @@ jobs:
            key: ${{ secrets.PRIVATE_KEY }}
            port: 22
            script: |
-             killall node
              cd /home/auction/
              git pull origin master
+             cd /home/auction/projects
+             npm start
+             cd /home/auction/takens 
+             npm start
+             cd /home/auction/users
              git status
            
