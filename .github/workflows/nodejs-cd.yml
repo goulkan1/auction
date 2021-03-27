@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: CD
        - name: Deploy using ssh
          uses: appleboy/ssh-action@master
          with:
