@@ -7,7 +7,7 @@ const Project = mongoose.model("Project");
 const auth = require("./middleware/auth");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-
+const cors = require("cors");
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());

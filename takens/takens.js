@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 require("./Taken");
 const Taken = mongoose.model("Taken");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 const auth = require("./middleware/auth");
 const cookieParser = require("cookie-parser");
 
