@@ -14,9 +14,9 @@ var path = require("path");
 const User = mongoose.model("User");
 app.use("/img", express.static("img"));
 app.use("/logo", express.static("logo"));
-app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/users?retryWrites=true&w=majority",
