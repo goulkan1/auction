@@ -16,6 +16,8 @@ app.use("/img", express.static("img"));
 app.use("/logo", express.static("logo"));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use(express.json({ extended: false }));
 app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 
 mongoose.connect(
@@ -23,6 +25,14 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true },
   console.log("konek database")
 );
+
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  next();
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
