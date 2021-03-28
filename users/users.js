@@ -173,7 +173,7 @@ app.post("/login", async (req, res) => {
   });
 
   const { password, email, ...data } = await user.toJSON();
-  res.send(data);
+  res.send(token);
 });
 
 app.post("/logout", (req, res) => {
