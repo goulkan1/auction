@@ -47,7 +47,15 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
-app.use(multer({ storage: storage, fileFilter: fileFilter }).single("image"));
+app.use(
+  multer({ storage: storage, fileFilter: fileFilter }).fields([
+    {
+      name: "image",
+      maxCount: 1,
+    },
+    { name: "logo", maxCount: 1 },
+  ])
+);
 
 app.post("/register", async (req, res) => {
   const error = validationResult(req);
@@ -58,11 +66,11 @@ app.post("/register", async (req, res) => {
     throw err;
   }
 
-  if (!req.file) {
-    const err = new Error("image harus di upload");
-    err.errorStatus = 422;
-    throw err;
-  }
+  // if (!req.file) {
+  //   const err = new Error("image harus di upload");
+  //   err.errorStatus = 422;
+  //   throw err;
+  // }
 
   const salt = await bcrypt.genSalt(10);
   const hassedPassword = await bcrypt.hash(req.body.password, salt);
@@ -84,11 +92,11 @@ app.post("/register", async (req, res) => {
     roles: req.body.roles,
     status: req.body.status,
     password: hassedPassword,
-    image: req.file.path,
-    logo: req.body.status,
+    image: req.files.image[0].path,
+    logo: req.files.logo[0].path,
   };
   var user = new User(newUser);
-  console.log(req.file.path);
+  console.log(req.files.image[0]);
   const result = await user.save();
   const { password, ...data } = await result.toJSON();
   res.send(data);
