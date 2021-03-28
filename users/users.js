@@ -6,20 +6,64 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-require("./User");
-const auth = require("./middleware/auth");
+require("./src/models/User");
+const auth = require("./src/middleware/auth");
+const multer = require("multer");
+const { validationResult } = require("express-validator");
+var path = require("path");
+const User = mongoose.model("User");
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-const User = mongoose.model("User");
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/users?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true },
   console.log("konek database")
 );
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (file.fieldname === "logo") {
+      cb(null, "./logo");
+    } else {
+      cb(null, "./img");
+    }
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + "-" + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/png"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+app.use(multer({ storage: storage, fileFilter: fileFilter }).single("image"));
+
 app.post("/register", async (req, res) => {
+  const error = validationResult(req);
+  if (!error) {
+    const err = new Error("imput tidak sesusai");
+    err.errorStatus = 404;
+    err.data = err.data();
+    throw err;
+  }
+
+  if (!req.file) {
+    const err = new Error("image harus di upload");
+    err.errorStatus = 422;
+    throw err;
+  }
+
   const salt = await bcrypt.genSalt(10);
   const hassedPassword = await bcrypt.hash(req.body.password, salt);
 
@@ -40,23 +84,17 @@ app.post("/register", async (req, res) => {
     roles: req.body.roles,
     status: req.body.status,
     password: hassedPassword,
-    logo: req.body.logo,
-    image: req.body.image,
+    image: req.file.path,
+    logo: req.body.status,
   };
   var user = new User(newUser);
-
+  console.log(req.file.path);
   const result = await user.save();
   const { password, ...data } = await result.toJSON();
   res.send(data);
 });
 
 app.get("/users", auth, async (req, res, next) => {
-  // const cookie = req.cookies["jwt"];
-  // const claims = jwt.verify(cookie, "secret");
-
-  // if (!claims) {
-  //   return res.status(401).send({ message: "unauth " });
-  // }
   User.find()
     .then((Users) => {
       res.json(Users);
@@ -66,7 +104,6 @@ app.get("/users", auth, async (req, res, next) => {
         throw err;
       }
     });
-  // res.send(data);
 });
 
 app.get("/user/:id", auth, (req, res) => {
@@ -112,10 +149,8 @@ app.post("/login", async (req, res) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
 
-  // res.send(token);
   const { password, email, ...data } = await user.toJSON();
   res.send(data);
-  //   res.send({ message: "sukses" });
 });
 
 app.post("/logout", (req, res) => {
