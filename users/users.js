@@ -26,13 +26,13 @@ mongoose.connect(
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "logo") {
-      cb(null, "./logo");
+      cb(null, "./logo/");
     } else {
-      cb(null, "./img");
+      cb(null, "./img/");
     }
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + file.originalname);
+    cb(null, file.originalname);
   },
 });
 
@@ -96,7 +96,6 @@ app.post("/register", async (req, res) => {
     logo: req.files.logo[0].path,
   };
   var user = new User(newUser);
-  console.log(req.files.image[0]);
   const result = await user.save();
   const { password, ...data } = await result.toJSON();
   res.send(data);
