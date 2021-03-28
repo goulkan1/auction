@@ -12,7 +12,8 @@ const multer = require("multer");
 const { validationResult } = require("express-validator");
 var path = require("path");
 const User = mongoose.model("User");
-
+app.use("/img", express.static("img"));
+app.use("/logo", express.static("logo"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
