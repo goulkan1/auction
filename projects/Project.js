@@ -1,26 +1,16 @@
 const mongoose = require("mongoose");
 
+const reqString = {
+  type: "string",
+  required: true,
+};
+
 mongoose.model("Project", {
-  nama: {
-    type: "string",
-    require: true,
-  },
-  value: {
-    type: "string",
-    require: true,
-  },
-  require: {
-    type: "string",
-    require: true,
-  },
-  dekripsi: {
-    type: "string",
-    require: true,
-  },
-  status: {
-    type: "string",
-    require: true,
-  },
+  nama: reqString,
+  value: reqString,
+  require: reqString,
+  dekripsi: reqString,
+  status: reqString,
   expires: {
     type: Date,
     require: true,
@@ -33,14 +23,8 @@ mongoose.model("Project", {
     type: Date,
     require: true,
   },
-  nMilestone: {
-    type: "string",
-    require: true,
-  },
-  kategori: {
-    type: "string",
-    require: true,
-  },
+  nMilestone: reqString,
+  kategori: reqString,
   idUser: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
