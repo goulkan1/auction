@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(express.json({ extended: false }));
-app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
+// app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 
 mongoose.connect(
   "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/users?retryWrites=true&w=majority",
@@ -27,7 +27,7 @@ mongoose.connect(
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", true);
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header(
     "Access-Control-Allow-Methods",
     "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
