@@ -2,14 +2,28 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 
 exports.getAllUsers = async (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.perPage || 5;
+  let totalItems;
+
   User.find()
-    .then((Users) => {
-      res.json(Users);
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return User.find()
+        .skip((parseInt(currentPage) - 1) * perPage)
+        .limit(parseInt(perPage));
+    })
+    .then((result) => {
+      res.status(200).json({
+        data: result,
+        total_data: totalItems,
+        per_page: parseInt(perPage),
+        current_page: parseInt(currentPage),
+      });
     })
     .catch((err) => {
-      if (err) {
-        throw err;
-      }
+      next(err);
     });
 };
 
