@@ -8,7 +8,7 @@ const reqString = {
 mongoose.model("Project", {
   nama: reqString,
   value: reqString,
-  require: reqString,
+  required: reqString,
   dekripsi: reqString,
   status: reqString,
   expires: {
