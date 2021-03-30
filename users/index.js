@@ -10,13 +10,27 @@ const User = mongoose.model("User");
 app.use("/img", express.static("img"));
 app.use("/logo", express.static("logo"));
 app.use(bodyParser.json());
-app.use(cookieParser());
 const userRoutes = require("./src/routes/users");
 const userRegister = require("./src/routes/register");
-app.use(express.json({ extended: false }));
-app.use(cors({ origin: true, credentials: true }));
 const multer = require("multer");
+app.use(express.json());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cookieParser());
 
+// app.get("/", function (req, res) {
+//   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+//   ); // If needed
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "X-Requested-With,content-type"
+//   ); // If needed
+//   res.setHeader("Access-Control-Allow-Credentials", true); // If needed
+
+//   res.send("cors problem fixed:)");
+// });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "logo") {

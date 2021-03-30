@@ -56,12 +56,15 @@ exports.userLogin = async (req, res) => {
     { _id: user._id, name: user.nama, roles: user.roles },
     "secret"
   );
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  res.send(token);
+  res
+    .status(200)
+    .cookie("jwt", token, {
+      secure: true,
+      sameSite: "none",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+    .send("berhasil");
 };
 
 exports.userLogout = async (req, res) => {

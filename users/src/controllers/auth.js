@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 module.exports = function (req, res, next) {
   let token;
   if (
-    (token = req.cookies["jwt"])
+    (token = req.cookies.jwt)
     // &&    req.headers.authorization.startsWith("Bearer")
   ) {
   }
