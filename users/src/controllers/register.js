@@ -52,13 +52,15 @@ exports.userLogin = async (req, res) => {
   if (!(await bcrypt.compare(req.body.password, user.password))) {
     return res.status(400).send({ message: "password salah" });
   }
-  const token = jwt.sign({ _id: user._id }, "secret");
+  const token = jwt.sign(
+    { _id: user._id, name: user.nama, roles: user.roles },
+    "secret"
+  );
   res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
   });
 
-  const { password, email, ...data } = await user.toJSON();
   res.send(token);
 };
 

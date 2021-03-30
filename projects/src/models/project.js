@@ -5,26 +5,24 @@ const reqString = {
   required: true,
 };
 
+const reqNumber = {
+  type: Number,
+  required: true,
+};
+
 mongoose.model("Project", {
-  nama: reqString,
-  value: reqString,
-  required: reqString,
-  dekripsi: reqString,
-  status: reqString,
-  expires: {
-    type: Date,
-    require: true,
-  },
-  startProject: {
-    type: Date,
-    require: true,
-  },
-  endProject: {
-    type: Date,
-    require: true,
-  },
-  nMilestone: reqString,
-  kategori: reqString,
+  title: reqString,
+  information: reqString,
+  date: { type: Date, default: Date.now },
+  category: reqString,
+  method: reqString,
+  fiscal: reqNumber,
+  value: reqNumber,
+  payment: reqString,
+  location: reqString,
+  qualification: reqString,
+  term: { type: Array, required: true },
+  status: { type: Boolean, required },
   idUser: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,

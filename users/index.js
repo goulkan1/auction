@@ -14,22 +14,8 @@ app.use(cookieParser());
 const userRoutes = require("./src/routes/users");
 const userRegister = require("./src/routes/register");
 app.use(express.json({ extended: false }));
-// app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
+app.use(cors({ origin: true, credentials: true }));
 const multer = require("multer");
-
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Credentials", "http://localhost:3000");
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
-  );
-  next();
-});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -72,7 +58,7 @@ mongoose.connect(
   console.log("konek database")
 );
 
-app.use("/v1/user", auth, userRoutes);
+app.use("/v1/user", userRoutes);
 app.use("/v1/auth", userRegister);
 
 app.listen(8001, () => {

@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+var validate = require("mongoose-validator");
 
 const reqString = {
-  type: "string",
-  required: true,
+  type: String,
+  required: [true, "Tidak Boleh Kosong"],
 };
 
 const addressSchema = mongoose.Schema({
@@ -13,7 +14,7 @@ const addressSchema = mongoose.Schema({
   kelurahan: reqString,
   alamat: reqString,
 });
-
+//verify notverify banned
 mongoose.model("User", {
   nama: reqString,
   address: {
@@ -25,7 +26,11 @@ mongoose.model("User", {
   about: reqString,
   email: reqString,
   roles: { type: Number, required: true },
-  status: reqString,
+  status: {
+    type: String,
+    required: [true, "Tidak Boleh Kosong"],
+    valenum: ["verify", "notverify", "banned"],
+  },
   password: reqString,
   logo: reqString,
   image: reqString,
