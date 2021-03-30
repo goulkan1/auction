@@ -14,7 +14,17 @@ const userRoutes = require("./src/routes/users");
 const userRegister = require("./src/routes/register");
 const multer = require("multer");
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    origin: [
+      // "http://127.0.0.1:3000",
+      "http://localhost:3000",
+      // "http://167.71.171.235:8001",
+    ],
+    credentials: true,
+  })
+);
+app.options("*");
 app.use(cookieParser());
 
 // app.get("/", function (req, res) {
