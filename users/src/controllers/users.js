@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 
-exports.getAllUsers = async (req, res, next) => {
+exports.getAllUsers = async (req, res) => {
   const currentPage = req.query.page || 1;
   const perPage = req.query.perPage || 5;
   let totalItems;
@@ -22,9 +22,7 @@ exports.getAllUsers = async (req, res, next) => {
         current_page: parseInt(currentPage),
       });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch((err) => {});
 };
 
 exports.deleteUser = async (req, res) => {
