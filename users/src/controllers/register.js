@@ -60,6 +60,7 @@ exports.userLogin = async (req, res) => {
     .status(200)
     .cookie("jwt", token, {
       secure: true,
+      path: "/",
       sameSite: "none",
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
