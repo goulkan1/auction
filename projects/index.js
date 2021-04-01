@@ -17,7 +17,7 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true },
   console.log("konek database")
 );
-app.use("/v1/project", auth, projectRoutes);
+app.use("/v1/project", projectRoutes);
 
 app.listen(8002, () => {
   console.log(`Server started on port 8002`);
