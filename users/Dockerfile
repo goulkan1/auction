@@ -1,13 +1,11 @@
 FROM node:14
 
 
-WORKDIR /usr/app
-ENV NODE_ENV=production
-expose 8001
-
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 RUN npm install
 
 COPY . .
-CMD [ "npm","start" ]
+
+CMD [ "npm", "start" ]
