@@ -22,7 +22,7 @@ mongoose.model("Project", {
   location: reqString,
   qualification: reqString,
   term: { type: Array, required: true },
-  status: { type: Boolean, required },
+  status: { type: Boolean, required: true },
   idUser: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,

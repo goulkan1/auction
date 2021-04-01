@@ -29,7 +29,7 @@ mongoose.model("User", {
   status: {
     type: String,
     required: [true, "Tidak Boleh Kosong"],
-    valenum: ["verify", "notverify", "banned"],
+    enum: ["verify", "notverify", "banned"],
   },
   password: reqString,
   logo: reqString,

@@ -1,24 +1,26 @@
 const mongoose = require("mongoose");
 const Project = mongoose.model("Project");
+mongoose.set("useFindAndModify", true);
 
 exports.ubahProject = async (req, res) => {
-  const options = { new: true };
+  const options = { new: true, upsert: true };
   const id = req.params.id;
   var updateProject = {
-    nama: req.body.nama,
+    title: req.body.title,
+    information: req.body.information,
+    category: req.body.category,
+    method: req.body.method,
+    fiscal: req.body.fiscal,
     value: req.body.value,
-    required: req.body.required,
-    deskripsi: req.body.deskripsi,
+    payment: req.body.payment,
+    location: req.body.location,
+    qualification: req.body.qualification,
+    term: req.body.term,
     status: req.body.status,
-    expires: req.body.expires,
-    startProject: req.body.startProject,
-    endProject: req.body.endProject,
-    nMilestone: req.body.nMilestone,
-    kategori: req.body.kategori,
     idUser: mongoose.Types.ObjectId(req.body.idUser),
   };
-  result = await Project.findOneAndUpdate(id, updateProject, options);
-  res.send(result);
+  result = await Project.findOneAndUpdate({ _id: id }, updateProject, options);
+  res.status(200).send(result);
 };
 
 exports.projectById = (req, res) => {
@@ -63,16 +65,17 @@ exports.getAllProject = (req, res) => {
 
 exports.tambahProject = async (req, res) => {
   var newProject = {
-    nama: req.body.nama,
+    title: req.body.title,
+    information: req.body.information,
+    category: req.body.category,
+    method: req.body.method,
+    fiscal: req.body.fiscal,
     value: req.body.value,
-    required: req.body.required,
-    dekripsi: req.body.dekripsi,
+    payment: req.body.payment,
+    location: req.body.location,
+    qualification: req.body.qualification,
+    term: req.body.term,
     status: req.body.status,
-    expires: req.body.expires,
-    startProject: req.body.startProject,
-    endProject: req.body.endProject,
-    nMilestone: req.body.nMilestone,
-    kategori: req.body.kategori,
     idUser: mongoose.Types.ObjectId(req.body.idUser),
   };
 
