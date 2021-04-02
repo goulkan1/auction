@@ -14,6 +14,7 @@ const userRoutes = require("./src/routes/users");
 const userRegister = require("./src/routes/register");
 const multer = require("multer");
 app.use(express.json());
+const { validationResult } = require("express-validator");
 
 app.use(
   cors({

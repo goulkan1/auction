@@ -5,35 +5,44 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const multer = require("multer");
 
-exports.register = async (req, res) => {
-  const error = validationResult(req);
-  const salt = await bcrypt.genSalt(10);
-  const hassedPassword = await bcrypt.hash(req.body.password, salt);
-
-  var newUser = {
-    nama: req.body.nama,
-    email: req.body.email,
-    password: hassedPassword,
-  };
-  var user = new User(newUser);
-  const result = await user.save();
-  const { password, ...data } = await result.toJSON();
-  res.send(data);
+exports.register = async (req, res, next) => {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hassedPassword = await bcrypt.hash(req.body.password, salt);
+    const error = await validationResult(req);
+    if (!error.isEmpty()) {
+      return res.status(422).json({ error: error.array() });
+    }
+    var newUser = {
+      nama: req.body.nama,
+      email: req.body.email,
+      password: hassedPassword,
+    };
+    var user = new User(newUser);
+    const result = await user.save();
+    const { password, ...data } = await result.toJSON();
+    res
+      .status(201)
+      .json({ register: data, message: "data user berhasil di tambahkan" });
+  } catch (error) {
+    return res.status(422).json({ message: "Tidak Boleh Kosong" });
+  }
 };
 
 exports.userLogin = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return res.status(404).send({ message: "email salah " });
+    return res.status(401).send({ message: "Unauthorized " });
   }
 
   if (!(await bcrypt.compare(req.body.password, user.password))) {
-    return res.status(400).send({ message: "password salah" });
+    return res.status(401).send({ message: "Unauthorized" });
   }
   const token = jwt.sign(
     { _id: user._id, name: user.nama, roles: user.roles },
     "secret"
   );
+  const { password, ...data } = await req.body;
   res
     .status(200)
     .cookie("jwt", token, {
@@ -43,7 +52,7 @@ exports.userLogin = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     })
-    .send("berhasil");
+    .json({ login: data, message: "login berhasil" });
 };
 
 exports.userLogout = async (req, res) => {
@@ -54,7 +63,7 @@ exports.userLogout = async (req, res) => {
 exports.updateUser = async (req, res) => {
   const error = validationResult(req);
   if (!error) {
-    const err = new Error("imput tidak sesusai");
+    const err = new Error("file tidak sesusai");
     err.errorStatus = 404;
     err.data = err.data();
     throw err;
@@ -86,5 +95,5 @@ exports.updateUser = async (req, res) => {
   var user = new User(newUser);
   const result = await user.save();
   const { password, ...data } = await result.toJSON();
-  res.send(data);
+  res.status(200).send(data);
 };

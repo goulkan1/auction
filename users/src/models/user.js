@@ -18,6 +18,8 @@ const addressSchema = mongoose.Schema({
 //verify notverify banned
 mongoose.model("User", {
   nama: reqString,
+  password: reqString,
+  email: reqString,
   address: {
     type: [addressSchema],
     type: String,
@@ -25,14 +27,12 @@ mongoose.model("User", {
   industri: reqStringOnly,
   website: reqStringOnly,
   about: reqStringOnly,
-  email: reqString,
   roles: { type: Number, required: true, default: 1 },
   status: {
     type: String,
     // required: [true, "Tidak Boleh Kosong"],
     enum: ["verify", "notverify", "banned"],
   },
-  password: reqString,
   logo: reqStringOnly,
   image: reqStringOnly,
 });
