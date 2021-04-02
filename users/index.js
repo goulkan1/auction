@@ -15,7 +15,8 @@ const userRegister = require("./src/routes/register");
 const multer = require("multer");
 app.use(express.json());
 const { validationResult } = require("express-validator");
-
+app.options("*");
+app.use(cookieParser());
 app.use(
   cors({
     origin: [
@@ -26,8 +27,6 @@ app.use(
     credentials: true,
   })
 );
-app.options("*");
-app.use(cookieParser());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

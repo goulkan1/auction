@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const multer = require("multer");
-
+const Cookies = require("js-cookie");
 exports.register = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(10);
@@ -46,7 +46,7 @@ exports.userLogin = async (req, res) => {
   res
     .status(200)
     .cookie("jwt", token, {
-      secure: true,
+      // secure: true,
       path: "/",
       sameSite: "none",
       httpOnly: true,
@@ -96,4 +96,13 @@ exports.updateUser = async (req, res) => {
   const result = await user.save();
   const { password, ...data } = await result.toJSON();
   res.status(200).send(data);
+};
+
+exports.isLoggin = async (req, res) => {
+  var token = req.headers.cookie;
+  const decode = token.split("=");
+
+  const ewe = jwt.verify(decode[1], "secret");
+  console.log(ewe);
+  res.send(ewe);
 };
