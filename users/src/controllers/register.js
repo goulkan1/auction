@@ -7,35 +7,13 @@ const multer = require("multer");
 
 exports.register = async (req, res) => {
   const error = validationResult(req);
-  if (!error) {
-    const err = new Error("imput tidak sesusai");
-    err.errorStatus = 404;
-    err.data = err.data();
-    throw err;
-  }
-
   const salt = await bcrypt.genSalt(10);
   const hassedPassword = await bcrypt.hash(req.body.password, salt);
 
   var newUser = {
     nama: req.body.nama,
-    address: {
-      idn: req.body.address.idn,
-      provinsi: req.body.address.provinsi,
-      kota: req.body.address.kota,
-      kecamatan: req.body.address.kecamatan,
-      kelurahan: req.body.address.kelurahan,
-      alamat: req.body.address.alamat,
-    },
-    industri: req.body.industri,
-    website: req.body.website,
-    about: req.body.about,
     email: req.body.email,
-    roles: req.body.roles,
-    status: req.body.status,
     password: hassedPassword,
-    image: req.files.image[0].path,
-    logo: req.files.logo[0].path,
   };
   var user = new User(newUser);
   const result = await user.save();
@@ -71,4 +49,42 @@ exports.userLogin = async (req, res) => {
 exports.userLogout = async (req, res) => {
   res.cookie("jwt", "", { maxAge: 0 });
   res.send({ message: "logout berhasil" });
+};
+
+exports.updateUser = async (req, res) => {
+  const error = validationResult(req);
+  if (!error) {
+    const err = new Error("imput tidak sesusai");
+    err.errorStatus = 404;
+    err.data = err.data();
+    throw err;
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const hassedPassword = await bcrypt.hash(req.body.password, salt);
+
+  var newUser = {
+    nama: req.body.nama,
+    address: {
+      idn: req.body.address.idn,
+      provinsi: req.body.address.provinsi,
+      kota: req.body.address.kota,
+      kecamatan: req.body.address.kecamatan,
+      kelurahan: req.body.address.kelurahan,
+      alamat: req.body.address.alamat,
+    },
+    industri: req.body.industri,
+    website: req.body.website,
+    about: req.body.about,
+    email: req.body.email,
+    roles: req.body.roles,
+    status: req.body.status,
+    password: hassedPassword,
+    image: req.files.image[0].path,
+    logo: req.files.logo[0].path,
+  };
+  var user = new User(newUser);
+  const result = await user.save();
+  const { password, ...data } = await result.toJSON();
+  res.send(data);
 };
