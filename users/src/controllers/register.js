@@ -42,7 +42,7 @@ exports.userLogin = async (req, res) => {
     { _id: user._id, name: user.nama, roles: user.roles },
     "secret"
   );
-  const { password, ...data } = await req.body;
+
   res
     .status(200)
     .cookie("jwt", token, {
@@ -52,7 +52,7 @@ exports.userLogin = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     })
-    .json({ login: data, message: "login berhasil" });
+    .json({ login: user, message: "login berhasil" });
 };
 
 exports.userLogout = async (req, res) => {
