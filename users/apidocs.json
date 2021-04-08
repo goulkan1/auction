@@ -1,9 +1,18 @@
 {
-    "openapi": "3.0.0",
+    "swagger": "2.0.0",
     "info": {
         "title": "api users",
         "description": "api users",
-        "version": "1.0.0"
+        "version": "1.0.5"
+    },
+    "component": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
     },
     "servers": [{
             "url": "http://localhost:8002",
@@ -37,6 +46,83 @@
                 }
             }
         },
+        "/v1/project/project": {
+            "post": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Add Project",
+                "description": "Add Project Must Login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "information": {
+                                        "type": "string"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "method": {
+                                        "type": "string"
+                                    },
+                                    "fiscal": {
+                                        "type": "number"
+                                    },
+                                    "value": {
+                                        "type": "number"
+                                    },
+                                    "payment": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "qualification": {
+                                        "type": "string"
+                                    },
+                                    "term": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "available",
+                                                "pending",
+                                                "sold"
+                                            ],
+                                            "default": "available"
+                                        }
+                                    },
+                                    "status": {
+                                        "type": "boolean"
+                                    },
+                                    "idUser": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sukses"
+                    }
+                },
+                "security": [{
+                    "api_key": []
+                }]
+            }
+        },
         "/v1/project/project/{id}": {
             "get": {
                 "tags": [
@@ -58,11 +144,11 @@
                     }
                 }
             },
-            "put": {
+            "delete": {
                 "tags": [
                     "Project"
                 ],
-                "summary": "Get project by Id",
+                "summary": "Delete project by Id",
                 "description": "",
                 "parameters": [{
                     "in": "path",
@@ -70,7 +156,30 @@
                     "schema": {
                         "type": "string"
                     },
-                    "description": "Id Project"
+                    "description": "Delete Project Id"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Sukses"
+                    }
+                },
+                "security": [{
+                    "api_key": []
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Edit project by Id",
+                "description": "",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "description": "Edit Project by Id"
                 }],
                 "requestBody": {
                     "content": {
@@ -128,6 +237,13 @@
                     }
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
         }
     }
 }
