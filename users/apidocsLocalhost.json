@@ -15,12 +15,12 @@
     }
   },
   "servers": [{
-      "url": "https://api.zubiaskitchen.com/project",
+      "url": "http://localhost:8002",
       "description": "API Project"
     },
     {
-      "url": "https://api.zubiaskitchen.com/user",
-      "description": "API User"
+      "url": "http://localhost:8001",
+      "description": "API Users"
     }
   ],
   "tags": [{
@@ -62,6 +62,76 @@
           },
           "description": "Id Project"
         }],
+        "responses": {
+          "200": {
+            "description": "Sukses"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Project"
+        ],
+        "summary": "Edit project by Id",
+        "description": "",
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "schema": {
+            "type": "string"
+          },
+          "description": "Edit Project by Id"
+        }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "information": {
+                    "type": "string"
+                  },
+                  "date": {
+                    "type": "date"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string"
+                  },
+                  "fiscal": {
+                    "type": "number"
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "payment": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "qualification": {
+                    "type": "string"
+                  },
+                  "term": {
+                    "type": "[Array]"
+                  },
+                  "status": {
+                    "type": "Boolean"
+                  },
+                  "idUser": {
+                    "type": "ObjectId"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Sukses"
