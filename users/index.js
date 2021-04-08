@@ -17,6 +17,11 @@ app.use(express.json());
 const { validationResult } = require("express-validator");
 app.options("*");
 app.use(cookieParser());
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("./apidocs.json");
+
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc));
+
 app.use(
   cors({
     origin: [
@@ -64,7 +69,8 @@ app.use(
 );
 
 mongoose.connect(
-  "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/users?retryWrites=true&w=majority",
+  // "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/users?retryWrites=true&w=majority",
+  "mongodb+srv://public:z4ZM6lKTyhHOY7pe@cluster0.llm7c.mongodb.net/service1?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true },
   console.log("konek database")
 );

@@ -1,0 +1,133 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "api users",
+        "description": "api users",
+        "version": "1.0.0"
+    },
+    "servers": [{
+            "url": "http://localhost:8002",
+            "description": "API Project"
+        },
+        {
+            "url": "http://localhost:8001",
+            "description": "API Users"
+        },
+        {
+            "url": "http://localhost:8003",
+            "description": "API Taken"
+        }
+    ],
+    "tags": [{
+        "name": "Project",
+        "description": "API Project"
+    }],
+    "paths": {
+        "/v1/project/projects": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get All project",
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "Sukses"
+                    }
+                }
+            }
+        },
+        "/v1/project/project/{id}": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get project by Id",
+                "description": "",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "description": "Id Project"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Sukses"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get project by Id",
+                "description": "",
+                "parameters": [{
+                    "in": "path",
+                    "name": "id",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "description": "Id Project"
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "information": {
+                                        "type": "string"
+                                    },
+                                    "date": {
+                                        "type": "date"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "method": {
+                                        "type": "string"
+                                    },
+                                    "fiscal": {
+                                        "type": "number"
+                                    },
+                                    "value": {
+                                        "type": "number"
+                                    },
+                                    "payment": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "qualification": {
+                                        "type": "string"
+                                    },
+                                    "term": {
+                                        "type": "[Array]"
+                                    },
+                                    "status": {
+                                        "type": "Boolean"
+                                    },
+                                    "idUser": {
+                                        "type": "ObjectId"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sukses"
+                    }
+                }
+            }
+        }
+    }
+}

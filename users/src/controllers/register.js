@@ -97,12 +97,3 @@ exports.updateUser = async (req, res) => {
   const { password, ...data } = await result.toJSON();
   res.status(200).send(data);
 };
-
-exports.isLoggin = async (req, res) => {
-  var token = req.headers.cookie;
-  const decode = token.split("=");
-
-  const ewe = jwt.verify(decode[1], "secret");
-  console.log(ewe);
-  res.send(ewe);
-};
