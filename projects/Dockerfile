@@ -1,8 +1,6 @@
-FROM node:14
-
+FROM node:latest
 
 WORKDIR /usr/app
-ENV NODE_ENV=production
 expose 8002
 
 
@@ -11,3 +9,4 @@ RUN npm install
 
 COPY . .
 CMD [ "npm","start" ]
+

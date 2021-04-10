@@ -1,9 +1,28 @@
-version: '3'
-services: 
-  projects: 
-    container_name: projects
+version: "3"
+
+services:
+  user:
+    container_name: "user"
+    image: users:1.0
     ports:
-      - '8002:8002'
-    volumes:
-      - .:/app
- 
+      - 8001:8001
+    networks:
+      - node_network
+  takens:
+    container_name: "takens"
+    image: takens:1.0
+    ports:
+      - 8003:8003
+    networks:
+      - node_network
+  projects:
+    container_name: "projects"
+    image: projects:1.0
+    ports:
+    - 8002:8002
+    networks:
+      - node_network
+
+networks: 
+  node_network:
+    name: node_network
