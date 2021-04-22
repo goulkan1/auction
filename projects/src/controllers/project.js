@@ -26,19 +26,31 @@ exports.ubahProject = async (req, res) => {
 };
 
 exports.projectById = (req, res) => {
-  Project.findById(req.params.id)
-    .then((project) => {
-      if (project) {
-        res.json(project);
-      } else {
-        res.status(404);
-      }
-    })
-    .catch((err) => {
-      if (err) {
-        throw err;
-      }
-    });
+  const redisKey = req.params.id;
+  client.get(redisKey, async (err, data) => {
+    if (data) {
+      res.status(200).send({ isCached: true, data: JSON.parse(data) });
+    } else {
+      const fetchData = Project.findById(redisKey).then((result) => {
+        client.set(redisKey, JSON.stringify(result), "EX", 60);
+        res.status(200).send({ data: result });
+      });
+    }
+  });
+
+  // Project.findById(req.params.id)
+  //   .then((project) => {
+  //     if (project) {
+  //       res.json(project);
+  //     } else {
+  //       res.status(404);
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     if (err) {
+  //       throw err;
+  //     }
+  //   });
 };
 
 exports.deleteProject = (req, res) => {
@@ -54,7 +66,6 @@ exports.deleteProject = (req, res) => {
 };
 
 exports.getAllProject = async (req, res) => {
-  // const project = await Project.find();
   const redisKey = "project";
   client.get(redisKey, async (err, data) => {
     if (data) {
