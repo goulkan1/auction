@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Project = mongoose.model("Project");
+const redis = require("redis");
 mongoose.set("useFindAndModify", true);
+const client = redis.createClient();
 
 exports.ubahProject = async (req, res) => {
   const options = { new: true, upsert: true };
@@ -20,7 +22,7 @@ exports.ubahProject = async (req, res) => {
     idUser: mongoose.Types.ObjectId(req.body.idUser),
   };
   result = await Project.findOneAndUpdate({ _id: id }, updateProject, options);
-  res.status(200).send(result);
+  res.status(201).send(result);
 };
 
 exports.projectById = (req, res) => {
@@ -51,16 +53,19 @@ exports.deleteProject = (req, res) => {
     });
 };
 
-exports.getAllProject = (req, res) => {
-  Project.find()
-    .then((projects) => {
-      res.json(projects);
-    })
-    .catch((err) => {
-      if (err) {
-        throw err;
-      }
-    });
+exports.getAllProject = async (req, res) => {
+  // const project = await Project.find();
+  const redisKey = "project";
+  client.get(redisKey, async (err, data) => {
+    if (data) {
+      res.status(200).send({ isCached: true, data: JSON.parse(data) });
+    } else {
+      const fetchData = Project.find().then((result) => {
+        client.set(redisKey, JSON.stringify(result), "EX", 60);
+        res.status(200).send({ data: result });
+      });
+    }
+  });
 };
 
 exports.tambahProject = async (req, res) => {
@@ -82,5 +87,5 @@ exports.tambahProject = async (req, res) => {
   var project = new Project(newProject);
   const result = await project.save();
   const { ...data } = await result.toJSON();
-  res.send(data);
+  res.status(201).send(data);
 };
