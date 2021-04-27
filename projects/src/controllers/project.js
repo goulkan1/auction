@@ -37,20 +37,6 @@ exports.projectById = (req, res) => {
       });
     }
   });
-
-  // Project.findById(req.params.id)
-  //   .then((project) => {
-  //     if (project) {
-  //       res.json(project);
-  //     } else {
-  //       res.status(404);
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     if (err) {
-  //       throw err;
-  //     }
-  //   });
 };
 
 exports.deleteProject = (req, res) => {
@@ -66,15 +52,26 @@ exports.deleteProject = (req, res) => {
 };
 
 exports.getAllProject = async (req, res) => {
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.perPage || 15;
+  let totalItems;
   const redisKey = "project";
   client.get(redisKey, async (err, data) => {
     if (data) {
-      res.status(200).send({ isCached: true, data: JSON.parse(data) });
+      res.status(200).send({ data: JSON.parse(data), isCached: true });
     } else {
-      const fetchData = Project.find().then((result) => {
-        client.set(redisKey, JSON.stringify(result), "EX", 60);
-        res.status(200).send({ data: result });
-      });
+      const fetchData = Project.find()
+        .countDocuments()
+        .then((count) => {
+          totalItems = count;
+          return Project.find()
+            .skip((parseInt(currentPage) - 1) * perPage)
+            .limit(parseInt(perPage));
+        })
+        .then((result) => {
+          client.set(redisKey, JSON.stringify(result), "EX", 60);
+          res.status(200).send({ data: result });
+        });
     }
   });
 };

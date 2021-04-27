@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const reqString = {
   type: "string",
@@ -10,7 +11,7 @@ const reqNumber = {
   required: true,
 };
 
-mongoose.model("Project", {
+const schema = new Schema({
   title: reqString,
   information: reqString,
   date: { type: Date, default: Date.now },
@@ -28,3 +29,5 @@ mongoose.model("Project", {
     required: true,
   },
 });
+
+const Project = (module.exports = mongoose.model("Project", schema));

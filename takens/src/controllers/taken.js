@@ -5,6 +5,7 @@ exports.tambahTaken = async (req, res) => {
   var newTakens = {
     idProject: mongoose.Types.ObjectId(req.body.idProject),
     idUser: mongoose.Types.ObjectId(req.body.idUser),
+    userBid: req.body.userBid,
     specific: req.body.specific,
     prices: parseInt(req.body.prices),
   };
@@ -28,6 +29,7 @@ exports.getAllTakens = (req, res) => {
 
 exports.getTakenId = (req, res) => {
   Taken.findById(req.params.id)
+    .populate("userBid")
     .then((taken) => {
       if (taken) {
         res.json(taken);

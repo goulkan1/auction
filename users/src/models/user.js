@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-var validate = require("mongoose-validator");
 
 const reqString = {
   type: String,
@@ -7,32 +6,23 @@ const reqString = {
 };
 
 const reqStringOnly = { type: String };
-const addressSchema = mongoose.Schema({
-  idn: reqStringOnly,
-  provinsi: reqStringOnly,
-  kota: reqStringOnly,
-  kecamatan: reqStringOnly,
-  kelurahan: reqStringOnly,
-  alamat: reqStringOnly,
-});
-//verify notverify banned
-mongoose.model("User", {
+const Schema = mongoose.Schema;
+
+const schema = new Schema({
   nama: reqString,
   password: reqString,
   email: reqString,
-  address: {
-    type: [addressSchema],
-    type: String,
-  },
-  industri: reqStringOnly,
+  dob: { type: Date },
+  address: reqStringOnly,
+  gender: reqStringOnly,
   website: reqStringOnly,
   about: reqStringOnly,
-  roles: { type: Number, required: true, default: 1 },
+  phone: { type: Number },
+  roles: { type: Number, required: true, default: 0 },
   status: {
     type: String,
-    // required: [true, "Tidak Boleh Kosong"],
     enum: ["verify", "notverify", "banned"],
   },
-  logo: reqStringOnly,
   image: reqStringOnly,
 });
+const User = (module.exports = mongoose.model("User", schema));

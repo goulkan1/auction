@@ -70,7 +70,9 @@ app.use(
 
 mongoose.connect(
   // "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/users?retryWrites=true&w=majority",
-  "mongodb+srv://public:z4ZM6lKTyhHOY7pe@cluster0.llm7c.mongodb.net/service1?retryWrites=true&w=majority",
+  // "mongodb+srv://public:z4ZM6lKTyhHOY7pe@cluster0.llm7c.mongodb.net/service1?retryWrites=true&w=majority",
+  "mongodb+srv://dbUser:dbUser@cluster0.7so1o.mongodb.net/auction?retryWrites=true&w=majority",
+
   { useNewUrlParser: true, useUnifiedTopology: true },
   console.log("konek database")
 );

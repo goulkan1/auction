@@ -3,8 +3,8 @@ const User = mongoose.model("User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
-const multer = require("multer");
-const Cookies = require("js-cookie");
+mongoose.set("useFindAndModify", true);
+
 exports.register = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(10);
@@ -61,6 +61,8 @@ exports.userLogout = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  const options = { new: true, upsert: true, setDefaultsOnInsert: true };
+  const id = req.params.id;
   const error = validationResult(req);
   if (!error) {
     const err = new Error("file tidak sesusai");
@@ -68,32 +70,24 @@ exports.updateUser = async (req, res) => {
     err.data = err.data();
     throw err;
   }
-
   const salt = await bcrypt.genSalt(10);
   const hassedPassword = await bcrypt.hash(req.body.password, salt);
 
-  var newUser = {
+  var updateUser = {
     nama: req.body.nama,
-    address: {
-      idn: req.body.address.idn,
-      provinsi: req.body.address.provinsi,
-      kota: req.body.address.kota,
-      kecamatan: req.body.address.kecamatan,
-      kelurahan: req.body.address.kelurahan,
-      alamat: req.body.address.alamat,
-    },
-    industri: req.body.industri,
+    password: hassedPassword,
+    email: req.body.email,
+    phone: req.body.phone,
+    dob: req.body.dob,
+    address: req.body.address,
+    gender: req.body.gender,
     website: req.body.website,
     about: req.body.about,
-    email: req.body.email,
     roles: req.body.roles,
     status: req.body.status,
-    password: hassedPassword,
     image: req.files.image[0].path,
-    logo: req.files.logo[0].path,
   };
-  var user = new User(newUser);
-  const result = await user.save();
+  result = await User.findOneAndUpdate({ _id: id }, updateUser, options);
   const { password, ...data } = await result.toJSON();
   res.status(200).send(data);
 };
