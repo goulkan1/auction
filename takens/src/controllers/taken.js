@@ -55,3 +55,20 @@ exports.delete = (req, res) => {
       }
     });
 };
+
+exports.getBidById = (req, res) => {
+  Taken.find({ idProject: req.params.id })
+    .populate("userBid")
+    .then((taken) => {
+      if (taken) {
+        res.json(taken);
+      } else {
+        res.status(404);
+      }
+    })
+    .catch((err) => {
+      if (err) {
+        throw err;
+      }
+    });
+};

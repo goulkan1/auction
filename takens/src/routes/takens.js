@@ -7,6 +7,7 @@ const takenControllers = require("../controllers/taken");
 router.post("/taken", auth, takenControllers.tambahTaken);
 router.get("/takens", auth, takenControllers.getAllTakens);
 router.get("/taken/:id", auth, takenControllers.getTakenId);
+router.get("/bid/:id", takenControllers.getBidById);
 router.delete("/taken/:id", auth, takenControllers.delete);
 
 module.exports = router;

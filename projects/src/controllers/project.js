@@ -10,9 +10,8 @@ exports.ubahProject = async (req, res) => {
   var updateProject = {
     title: req.body.title,
     information: req.body.information,
+    deadLine: req.body.deadline,
     category: req.body.category,
-    method: req.body.method,
-    fiscal: req.body.fiscal,
     value: req.body.value,
     payment: req.body.payment,
     location: req.body.location,
@@ -31,10 +30,12 @@ exports.projectById = (req, res) => {
     if (data) {
       res.status(200).send({ isCached: true, data: JSON.parse(data) });
     } else {
-      const fetchData = Project.findById(redisKey).then((result) => {
-        client.set(redisKey, JSON.stringify(result), "EX", 60);
-        res.status(200).send({ data: result });
-      });
+      const fetchData = Project.findById(redisKey)
+        .populate("idUser")
+        .then((result) => {
+          client.set(redisKey, JSON.stringify(result), "EX", 60);
+          res.status(200).send({ data: result });
+        });
     }
   });
 };
@@ -61,6 +62,7 @@ exports.getAllProject = async (req, res) => {
       res.status(200).send({ data: JSON.parse(data), isCached: true });
     } else {
       const fetchData = Project.find()
+        .populate("idUser")
         .countDocuments()
         .then((count) => {
           totalItems = count;
@@ -80,9 +82,8 @@ exports.tambahProject = async (req, res) => {
   var newProject = {
     title: req.body.title,
     information: req.body.information,
+    deadLine: req.body.deadline,
     category: req.body.category,
-    method: req.body.method,
-    fiscal: req.body.fiscal,
     value: req.body.value,
     payment: req.body.payment,
     location: req.body.location,
