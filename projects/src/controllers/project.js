@@ -98,3 +98,24 @@ exports.tambahProject = async (req, res) => {
   const { ...data } = await result.toJSON();
   res.status(201).send(data);
 };
+
+exports.getAllCategories = async (req, res) => {
+  let totalItems;
+  const redisKey = "zczx";
+  client.get(redisKey, async (err, data) => {
+    if (data) {
+      res.status(200).send({ data: JSON.parse(data), isCached: true });
+    } else {
+      const fetchData = Project.find()
+        .countDocuments()
+        .then((count) => {
+          totalItems = count;
+          return Project.find({}, { category: 1 }).distinct("category");
+        })
+        .then((result) => {
+          client.set(redisKey, JSON.stringify(result), "EX", 60);
+          res.status(200).send({ data: result });
+        });
+    }
+  });
+};

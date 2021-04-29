@@ -31,7 +31,7 @@ const schema = new Schema({
   idUser: {
     type: Schema.Types.ObjectId,
   },
-  userBid: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  userBid: { type: Schema.Types.ObjectId, ref: "User" },
   specific: reqString,
   prices: {
     type: Number,
