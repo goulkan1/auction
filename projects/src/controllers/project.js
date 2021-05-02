@@ -54,7 +54,7 @@ exports.deleteProject = (req, res) => {
 
 exports.getAllProject = async (req, res) => {
   const currentPage = req.query.page || 1;
-  const perPage = req.query.perPage || 15;
+  const perPage = req.query.perPage || 25;
   let totalItems;
   const redisKey = "project";
   client.get(redisKey, async (err, data) => {
@@ -62,17 +62,23 @@ exports.getAllProject = async (req, res) => {
       res.status(200).send({ data: JSON.parse(data), isCached: true });
     } else {
       const fetchData = Project.find()
-        .populate("idUser")
         .countDocuments()
         .then((count) => {
           totalItems = count;
           return Project.find()
+            .sort({ datePublished: -1 })
+            .populate("idUser", "nama")
             .skip((parseInt(currentPage) - 1) * perPage)
             .limit(parseInt(perPage));
         })
         .then((result) => {
           client.set(redisKey, JSON.stringify(result), "EX", 60);
-          res.status(200).send({ data: result });
+          res.status(200).send({
+            data: result,
+            total_data: totalItems,
+            per_page: parseInt(perPage),
+            current_page: parseInt(currentPage),
+          });
         });
     }
   });
@@ -101,10 +107,14 @@ exports.tambahProject = async (req, res) => {
 
 exports.getAllCategories = async (req, res) => {
   let totalItems;
-  const redisKey = "zczx";
+  const redisKey = "category";
   client.get(redisKey, async (err, data) => {
     if (data) {
-      res.status(200).send({ data: JSON.parse(data), isCached: true });
+      res.status(200).send({
+        isCached: true,
+        data: JSON.parse(data),
+        total_data: totalItems,
+      });
     } else {
       const fetchData = Project.find()
         .countDocuments()
@@ -114,7 +124,31 @@ exports.getAllCategories = async (req, res) => {
         })
         .then((result) => {
           client.set(redisKey, JSON.stringify(result), "EX", 60);
-          res.status(200).send({ data: result });
+          res.status(200).send({ data: result, total_data: totalItems });
+        });
+    }
+  });
+};
+
+exports.getAllByCategories = async (req, res) => {
+  const redisKey = req.params.id;
+  client.get(redisKey, async (err, data) => {
+    if (data) {
+      res.status(200).send({
+        data: JSON.parse(data),
+        total_data: totalItems,
+        isCached: true,
+      });
+    } else {
+      const fetchData = Project.find()
+        .countDocuments()
+        .then((count) => {
+          totalItems = count;
+          return Project.find({ category: redisKey }).populate("idUser");
+        })
+        .then((result) => {
+          client.set(redisKey, JSON.stringify(result), "EX", 60);
+          res.status(200).send({ data: result, total_data: totalItems });
         });
     }
   });
