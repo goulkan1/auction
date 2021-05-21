@@ -7,5 +7,7 @@ router.get("/verify/:uniqueString", registerController.verify);
 router.post("/register", registerController.register);
 router.post("/login", registerController.userLogin);
 router.post("/logout", registerController.userLogout);
+router.get("/forgotpassword/:email", registerController.forgotPassword);
+router.post("/forgot/:uniqueString", registerController.forgot);
 
 module.exports = router;

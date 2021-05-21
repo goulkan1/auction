@@ -27,5 +27,6 @@ const schema = new Schema({
   },
   image: reqStringOnly,
   uniqueString: reqStringOnly,
+  resetPasswordToken: reqStringOnly,
 });
 const User = (module.exports = mongoose.model("User", schema));

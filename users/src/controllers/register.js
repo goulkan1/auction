@@ -30,6 +30,31 @@ const sendEmail = (email, uniqueString) => {
     }
   });
 };
+
+const sendForgotPassword = (email, uniqueString) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "goulkan114477@gmail.com",
+      pass: "114477ewe",
+    },
+  });
+
+  var mailOptions = {
+    from: "goulkan114477@gmail.com",
+    to: email,
+    subject: "Forgot Password",
+    html: `Press <a href=http://localhost:8001/v1/auth/forgot/${uniqueString}>Here</a> to verify your email`,
+  };
+
+  transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("email sent" + info.response);
+    }
+  });
+};
 const randString = () => {
   const len = 8;
   let randStr = "";
@@ -140,7 +165,6 @@ exports.verify = async (req, res) => {
     useFindAndModify: false,
   };
   const { uniqueString } = req.params;
-  console.log(uniqueString);
   const user = await User.findOne({ uniqueString: uniqueString });
   if (user) {
     var updateUser = {
@@ -151,9 +175,60 @@ exports.verify = async (req, res) => {
       updateUser,
       options
     );
-    const { ...data } = await result.toJSON();
     res.status(200).send("email is verified");
   } else {
     res.json(`user not found`);
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  const resetPasswordToken = randString();
+  const { email } = req.params;
+  const options = {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true,
+    useFindAndModify: false,
+  };
+  const user = await User.findOne({ email: email });
+  if (user) {
+    var updatePassword = {
+      resetPasswordToken: resetPasswordToken,
+    };
+    result = await User.findOneAndUpdate(
+      { email: email },
+      updatePassword,
+      options
+    );
+    res.json(`forgot password email send ${resetPasswordToken}`);
+    sendForgotPassword(email, resetPasswordToken);
+  } else {
+    res.status(404).json(`user not found`);
+  }
+};
+
+exports.forgot = async (req, res) => {
+  const options = {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true,
+    useFindAndModify: false,
+  };
+  const { uniqueString } = req.params;
+  const salt = await bcrypt.genSalt(10);
+  const hassedPassword = await bcrypt.hash(req.body.password, salt);
+  const user = await User.findOne({ resetPasswordToken: uniqueString });
+  if (user) {
+    var updatePassword = {
+      password: hassedPassword,
+    };
+    result = await User.findOneAndUpdate(
+      { resetPasswordToken: uniqueString },
+      updatePassword,
+      options
+    );
+    res.status(200).send("password is update");
+  } else {
+    res.status(404).json(`user not found`);
   }
 };
