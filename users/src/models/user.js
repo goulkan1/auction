@@ -6,6 +6,7 @@ const reqString = {
 };
 
 const reqStringOnly = { type: String };
+const reqNumber = { type: Number };
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
@@ -22,7 +23,9 @@ const schema = new Schema({
   status: {
     type: String,
     enum: ["verify", "notverify", "banned"],
+    default: "notverify",
   },
   image: reqStringOnly,
+  uniqueString: reqStringOnly,
 });
 const User = (module.exports = mongoose.model("User", schema));
