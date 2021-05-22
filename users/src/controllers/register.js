@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 mongoose.set("useFindAndModify", true);
-
 const nodemailer = require("nodemailer");
+
 const sendEmail = (email, uniqueString) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -65,6 +65,7 @@ const randString = () => {
   console.log(randStr);
   return randStr;
 };
+
 exports.register = async (req, res, next) => {
   try {
     const uniqueString = randString();
